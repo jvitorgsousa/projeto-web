@@ -1,0 +1,19 @@
+{
+  "name": "projeto-web",
+  "version": "1.0.0",
+  "description": "Um projeto simples relacionado a desenvolvimento Web. <br>\r O projeto consiste num site básico de listagem dos jogos de um usuário.\r Cada jogo _pode_ ser registrado na _biblioteca_ de um _jogador_, em seguida, o usuário irá poder decidir o status que o jogo registrado está de acordo com as horas jogadas.",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^6.0.1"
+  }
+}
