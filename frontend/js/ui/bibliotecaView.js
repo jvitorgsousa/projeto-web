@@ -32,8 +32,10 @@ export const bibliotecaView = {
     registrosBiblioteca.forEach(reg => {
       const li = document.createElement('li');
       li.className = 'list-group-item d-flex justify-content-between align-items-center';
+      
       li.innerHTML = `<div><strong>${reg.titulo}</strong> <small class="text-muted">(${reg.plataforma})</small></div>
-                      <span class="badge bg-secondary">${reg.horas_jogadas}h jogadas</span>`;
+                      <span class="badge bg-secondary">${reg.horasJogadas}h jogadas</span>`;
+                      
       lista.appendChild(li);
     });
   },
@@ -50,10 +52,13 @@ export const bibliotecaView = {
   onSubmit(callback) {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
+      
+      const horasInput = document.querySelector('#bib-horas').value;
+
       callback({
         jogador_id: selectJogador.value,
         jogo_id: selectJogo.value,
-        horas_jogadas: document.querySelector('#bib-horas').value
+        horas_jogadas: horasInput === '' ? 0 : Number(horasInput)
       });
     });
   }

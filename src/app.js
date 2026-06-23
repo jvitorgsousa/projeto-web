@@ -1,5 +1,7 @@
 import express from 'express';
 import cors from 'cors'
+import { db } from './db.js';
+
 import jogoRoutes from './routes/jogos.js';
 import jogadorRoutes from './routes/jogadores.js';
 import bibliotecaRoutes from './routes/bibliotecas.js';

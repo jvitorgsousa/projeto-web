@@ -1,19 +1,20 @@
-import dbPromise from '../models/jogo.js';
+import { jogoModel } from '../models/jogo.js';
+import { bibliotecaModel } from '../models/biblioteca.js';
 
 export const createJogo = async (dados) => {
-  const db = await dbPromise;
-  const { titulo, genero, plataforma, desenvolvedora, capa_url, status } = dados;
-  
-  const resultado = await db.run(
-    `INSERT INTO jogos (titulo, genero, plataforma, desenvolvedora, capa_url, status) 
-     VALUES (?, ?, ?, ?, ?, ?)`,
-    [titulo, genero, plataforma, desenvolvedora, capa_url, status || 'Ativo']
-  );
-  
-  return { id: resultado.lastID, ...dados };
+  return jogoModel.inserir(dados); // Sem await interno!
 };
 
 export const getAllJogos = async () => {
-  const db = await dbPromise;
-  return await db.all('SELECT * FROM jogos');
+  return jogoModel.listarTodos();
+};
+
+export const updateStatusJogo = async (id, status) => {
+  const jogoAtualizado = jogoModel.atualizarStatus(id, status);
+  
+  if (status === 'Inativo') {
+    bibliotecaModel.removerPorJogo(id);
+  }
+  
+  return jogoAtualizado;
 };

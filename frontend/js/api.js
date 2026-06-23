@@ -30,5 +30,13 @@ export const api = {
 
   // Biblioteca
   getBiblioteca(jogadorId) { return request(`/bibliotecas/${jogadorId}`); },
-  vincularJogo(dados) { return request('/bibliotecas', { method: 'POST', body: JSON.stringify(dados) }); }
+  vincularJogo(dados) { return request('/bibliotecas', { method: 'POST', body: JSON.stringify(dados) }); },
+
+  removerJogador(id) { 
+  return request(`/jogadores/${id}`, { method: 'DELETE' }); 
+  },
+atualizarStatusJogo(id, status) { 
+  return request(`/jogos/${id}/status`, { method: 'PUT', body: JSON.stringify({ status }) }); 
+  }
+  
 };

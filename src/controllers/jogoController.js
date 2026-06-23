@@ -17,3 +17,14 @@ export const listarJogos = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+export const atualizarStatusJogo = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const jogoAtualizado = await jogoService.updateStatusJogo(id, status);
+    res.status(200).json(jogoAtualizado);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};

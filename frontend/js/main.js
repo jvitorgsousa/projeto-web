@@ -22,8 +22,9 @@ async function carregarDadosGlobais() {
     const jogadores = await jogadorService.listar();
     const jogos = await jogoService.listar();
     
-    jogadorView.renderLista(jogadores);
-    jogoView.renderLista(jogos);
+    // 🎯 CORRIGIDO: Chamadas duplicadas removidas e parâmetros alinhados perfeitamente
+    jogadorView.renderLista(jogadores, deletarJogadorEAtualizar);
+    jogoView.renderLista(jogos, alterarStatusJogoEAtualizar);
     bibliotecaView.preencherDropdowns(jogadores, jogos);
     
     if (jogadorSelecionadoAtualmente) {
@@ -49,6 +50,27 @@ async function cadastrarJogo(dados) {
     await jogoService.criar(dados);
     jogoView.limparForm();
     await carregarDadosGlobais();
+  } catch (err) { mostrarErro(err.message); }
+}
+
+async function deletarJogadorEAtualizar(id) {
+  limparErro();
+  try {
+    await jogadorService.remover(id);
+    await carregarDadosGlobais(); // Recarrega tudo atualizado
+  } catch (err) { mostrarErro(err.message); }
+}
+
+async function alterarStatusJogoEAtualizar(id, novoStatus) {
+limparErro();
+  try {
+    await jogoService.mudarStatus(id, novoStatus);
+    
+    await carregarDadosGlobais();
+    
+    if (jogadorSelecionadoAtualmente) {
+      await carregarBiblioteca(jogadorSelecionadoAtualmente);
+    }
   } catch (err) { mostrarErro(err.message); }
 }
 

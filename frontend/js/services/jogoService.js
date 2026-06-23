@@ -14,5 +14,6 @@ export const jogoService = {
       desenvolvedora: desenvolvedora.trim(),
       capa_url: capa_url?.trim() || null
     });
-  }
+  },
+  mudarStatus(id, status) { return api.atualizarStatusJogo(id, status); }
 };

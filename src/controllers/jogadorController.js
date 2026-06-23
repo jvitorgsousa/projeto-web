@@ -17,3 +17,14 @@ export const listarJogadores = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+export const deletarJogador = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const apagado = await jogadorService.deleteJogador(id);
+    if (!apagado) return res.status(404).json({ error: "Jogador não encontrado." });
+    res.status(204).send(); // 204 = No Content (Sucesso sem corpo)
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

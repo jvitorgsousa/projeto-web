@@ -7,5 +7,7 @@ export const jogadorService = {
     if (!email?.trim()) throw new Error('Email é obrigatório');
     if (!senha?.trim()) throw new Error('Senha é obrigatória');
     return api.criarJogador({ nome: nome.trim(), email: email.trim(), senha });
-  }
+  },
+
+  remover(id) { return api.removerJogador(id); }
 };

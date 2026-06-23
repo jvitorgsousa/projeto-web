@@ -1,24 +1,24 @@
-import { open } from 'sqlite';
-import sqlite3 from 'sqlite3';
+import { db } from '../db.js';
 
-const dbPromise = open({
-  filename: './database.db',
-  driver: sqlite3.Database
-});
+export const jogoModel = {
+  listarTodos() {
+    return db.prepare('SELECT * FROM jogos').all();
+  },
 
-(async () => {
-  const db = await dbPromise;
-  await db.exec(`
-    CREATE TABLE IF NOT EXISTS jogos (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      titulo TEXT NOT NULL,
-      genero TEXT NOT NULL,
-      plataforma TEXT NOT NULL,
-      desenvolvedora TEXT NOT NULL,
-      capa_url TEXT,
-      status TEXT DEFAULT 'Ativo'
-    )
-  `);
-})();
+  buscarPorId(id) {
+    return db.prepare('SELECT * FROM jogos WHERE id = ?').get(id) || null;
+  },
 
-export default dbPromise;
+    atualizarStatus(id, status) {
+    db.prepare('UPDATE jogos SET status = ? WHERE id = ?').run(status, Number(id));
+    return this.buscarPorId(id);
+  },
+
+  inserir({ titulo, genero, plataforma, desenvolvedora, capa_url, status }) {
+    const r = db.prepare(
+      `INSERT INTO jogos (titulo, genero, plataforma, desenvolvedora, capa_url, status) 
+       VALUES (?, ?, ?, ?, ?, ?)`
+    ).run(titulo, genero, plataforma, desenvolvedora, capa_url ?? null, status || 'Ativo');
+    return this.buscarPorId(r.lastInsertRowid);
+  }
+};

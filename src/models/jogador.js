@@ -1,22 +1,26 @@
-import { open } from 'sqlite';
-import sqlite3 from 'sqlite3';
+import { db } from '../db.js';
 
-const dbPromise = open({
-  filename: './database.db',
-  driver: sqlite3.Database
-});
+export const jogadorModel = {
+  listarTodos() {
+    return db.prepare('SELECT id, nome, email, data_cadastro FROM jogadores').all();
+  },
 
-(async () => {
-  const db = await dbPromise;
-  await db.exec(`
-    CREATE TABLE IF NOT EXISTS jogadores (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      nome TEXT NOT NULL,
-      email TEXT NOT NULL UNIQUE,
-      senha TEXT NOT NULL,
-      data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
-})();
+  buscarPorId(id) {
+    return db.prepare('SELECT id, nome, email, data_cadastro FROM jogadores WHERE id = ?').get(id) || null;
+  },
 
-export default dbPromise;
+  remover(id) {
+    return db.prepare('DELETE FROM jogadores WHERE id = ?').run(Number(id)).changes > 0;
+  },
+
+  existeEmail(email) {
+    return db.prepare('SELECT 1 FROM jogadores WHERE email = ?').get(email) !== undefined;
+  },
+
+  inserir({ nome, email, senha }) {
+    const r = db.prepare(
+      'INSERT INTO jogadores (nome, email, senha, data_cadastro) VALUES (?, ?, ?, ?)'
+    ).run(nome, email, senha, new Date().toISOString());
+    return this.buscarPorId(r.lastInsertRowid);
+  }
+};

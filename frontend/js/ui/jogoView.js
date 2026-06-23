@@ -2,27 +2,25 @@ const form = document.querySelector('#form-jogo');
 const lista = document.querySelector('#lista-jogos');
 
 export const jogoView = {
-  renderLista(jogos) {
-    lista.innerHTML = '';
-    if (jogos.length === 0) {
-      lista.innerHTML = '<li class="list-group-item text-muted">Nenhum jogo no catálogo.</li>';
-      return;
-    }
-    jogos.forEach(j => {
-      const li = document.createElement('li');
-      li.className = 'list-group-item d-flex align-items-center gap-3';
-      
-      if (j.capa_url) {
-        const img = document.createElement('img');
-        img.src = j.capa_url;
-        img.className = 'capa-mini';
-        li.appendChild(img);
-      }
-
-      const info = document.createElement('div');
-      info.innerHTML = `<strong>${j.titulo}</strong> <br> <small class="text-muted">${j.genero} • ${j.plataforma}</small>`;
-      li.appendChild(info);
-      lista.appendChild(li);
+  renderLista(jogos, aoMudarStatus) {
+  lista.innerHTML = '';
+  if (jogos.length === 0) {
+    lista.innerHTML = '<li class="list-group-item text-muted">Nenhum jogo no catálogo.</li>';
+    return;
+  }
+  jogos.forEach(j => {
+    const li = document.createElement('li');
+    li.className = 'list-group-item d-flex justify-content-between align-items-center';
+    li.innerHTML = `
+      <div><strong>${j.titulo}</strong> <span class="badge ${j.status === 'Ativo' ? 'bg-success' : 'bg-warning'}">${j.status}</span></div>
+      <button class="btn btn-sm btn-outline-secondary btn-status">${j.status === 'Ativo' ? 'Inativar' : 'Ativar'}</button>
+    `;
+    
+    li.querySelector('.btn-status').addEventListener('click', () => {
+      const novoStatus = j.status === 'Ativo' ? 'Inativo' : 'Ativo';
+      aoMudarStatus(j.id, novoStatus);
+    });
+    lista.appendChild(li);
     });
   },
   limparForm() { form.reset(); },
